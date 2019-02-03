@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class character:
     def __init__(self,x,y):
         self.x = x
@@ -34,8 +35,6 @@ class character:
     def draw(self):
         pg.draw.rect(screen,(255,255,255),self.hitbox())
 
-
-
 class wt_on_earth:
     def __init__(self,x,y,width,height):
         self.x = x
@@ -50,17 +49,12 @@ class wt_on_earth:
         if self.x - mario.x < 450:
             pg.draw.rect(screen, (47,79,79), (self.x,self.y,self.width,self.height))
 
-class breakable(wt_on_earth):
-    def __init__(self,x,y,width,height):
-        wt_on_earth.__init__(self,x,y,width,height)
-    def ceiling(self):
-        return pg.Rect(self.x,self.y + self.height,self.width,4)
-
 def draw():
     for i in range(len(map)):
         map[i].draw()
 
 def destroy():
+    pass
 
 def colli():
     for i in range(len(map)):
@@ -85,13 +79,6 @@ def camera(sign):
             map[i].x += mario.vel * sign
         mario.x += mario.vel * sign
 
-pg.init()
-screen = pg.display.set_mode((500,300))
-pg.display.set_caption('Mario')
-clock = pg.time.Clock()
-moveCam = False
-
-mario = character(50,260)
 #groung
 g1 = wt_on_earth(0,280,1100,20)
 g2 = wt_on_earth(1135,280,240,20)
@@ -144,6 +131,16 @@ map = [g1,g2,g3,g4,
        s31,s32,s33,s34,s35,
        s41,s42,s43,s44,
        s51,s52,s53,s54,s55,s56,s57,s58,s59]
+
+
+
+pg.init()
+screen = pg.display.set_mode((500,300))
+pg.display.set_caption('Mario')
+clock = pg.time.Clock()
+moveCam = False
+
+mario = character(50,260)
 
 run = True
 while run:
