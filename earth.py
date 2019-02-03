@@ -14,4 +14,4 @@ class wt_on_earth():#block = (x,y,width,height)
         return pg.Rect(self.x,self.y - 4,self.width,4)
     def draw(self,mario,screen):
         if self.x - mario.x < 4500:
-            pg.draw.rect(screen, (0, 255, 0), (self.x,self.y,self.width,self.height))
+            pg.draw.rect(screen, (0, 255, 0), (50+self.x-mario.x,self.y,self.width,self.height))

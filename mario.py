@@ -23,15 +23,10 @@ def gravity():
     if not(isEarth(map) or mario.jumping):
         mario.y += 5
 
-def camera(sign):
-    global moveCam
-    if 200 < mario.x < 3200:
-        moveCam = True
-    if moveCam:
-        for keys,values in map.items():
-            earth.wt_on_earth(values).x += mario.vel * sign
-        mario.x += mario.vel * sign
-
+def new_gravity():
+    if not(isEarth(map) or mario.jumping):
+        mario.dy += 1
+        mario.y += mario.dy
 
 map = map1_1()
 
@@ -46,7 +41,8 @@ mario = character(50,260)
 run = True
 while run:
     clock.tick(30)
-    print colli(map)
+    print mario.x,mario.y
+
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False
@@ -64,16 +60,15 @@ while run:
     keys = pg.key.get_pressed()
     if keys[pg.K_LEFT] and mario.x > 0:
         mario.x -= mario.vel
-        camera(1)
+
         if colli(map):
-            camera(-1)
             mario.x += mario.vel
-    if keys[pg.K_RIGHT] and mario.x < 975:
+    if keys[pg.K_RIGHT] and mario.x < 9750:
         mario.x += mario.vel
-        camera(-1)
+
         if colli(map):
-            camera(1)
             mario.x -= mario.vel
+
     if not(mario.jumping):
         if keys[pg.K_UP] and isEarth(map):
             mario.jumping = True

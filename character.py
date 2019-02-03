@@ -36,5 +36,9 @@ class character(object):
         else:
             self.jumping = False
             self.jumpCount = self.jc
+
+
+
+
     def draw(self,screen):
-        pg.draw.rect(screen,(255,255,255),self.hitbox())
+        pg.draw.rect(screen,(255,255,255),pg.Rect(50, self.y, self.width, self.height))
