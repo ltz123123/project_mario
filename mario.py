@@ -6,7 +6,7 @@ class character:
         self.y = y
         self.width = 10
         self.height = 20
-        self.vel = 4
+        self.vel = 5
         self.jumping = False
         self.jumpspeed = 5
         self.jc = 16
@@ -48,11 +48,19 @@ class wt_on_earth:
         return pg.Rect(self.x,self.y - 4,self.width,4)
     def draw(self):
         if self.x - mario.x < 450:
-            pg.draw.rect(screen, (0, 255, 0), (self.x,self.y,self.width,self.height))
+            pg.draw.rect(screen, (47,79,79), (self.x,self.y,self.width,self.height))
+
+class breakable(wt_on_earth):
+    def __init__(self,x,y,width,height):
+        wt_on_earth.__init__(self,x,y,width,height)
+    def ceiling(self):
+        return pg.Rect(self.x,self.y + self.height,self.width,4)
 
 def draw():
     for i in range(len(map)):
         map[i].draw()
+
+def destroy():
 
 def colli():
     for i in range(len(map)):
