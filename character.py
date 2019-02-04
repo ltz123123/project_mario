@@ -9,7 +9,7 @@ class character(object):
         self.dy = 0
         self.width = 10
         self.height = 20
-        self.vel = 4
+        self.vel = 1
         self.jumping = False
         self.jumpCount = 5
 
@@ -18,8 +18,10 @@ class character(object):
 
     def hitbox(self):
         return pg.Rect(self.x, self.y, self.width, self.height)
+
     def head(self):
         return pg.Rect(self.x, self.y, self.width, self.height * 0.5)
+
     def accelerate():
         ''
 

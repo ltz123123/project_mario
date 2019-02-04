@@ -30,30 +30,34 @@ def isEarth(map, map_q):
     return False
 
 
-def hit_ceiling():
+def hit_ceiling_hitbox():
     for i in map_qmark:
         if mario.head().colliderect(i.ceiling_hitbox()):
             i.broken = True
             return True
-
-
-
+def hit_ceiling():
+    for i in map_qmark:
+        if mario.hitbox().colliderect(i.ceiling()):
+            return True
+    return False
 
 def vert_move():
     mario.y += mario.dy
     if hit_ceiling():
         mario.dy = 0
-
     else:
         while colli(map, map_qmark):
             mario.jumping = False
             mario.y -= 1
 
 
-
 def gravity():
     if not isEarth(map, map_qmark):
         mario.dy += 2
+    else:
+        while colli(map, map_qmark):
+            mario.jumping = False
+            mario.y -= 1
 
 
 def camera(sign):
@@ -66,7 +70,6 @@ def camera(sign):
         for j in map_qmark:
             j.x += mario.vel * sign
         mario.x += mario.vel * sign
-
 
 
 pg.init()
@@ -92,7 +95,7 @@ while run:
     mario.draw(screen)
     vert_move()
     gravity()
-    hit_ceiling()
+    hit_ceiling_hitbox()
     print(mario.dy)
 
     keys = pg.key.get_pressed()
@@ -115,7 +118,6 @@ while run:
             if not mario.jumping:
                 mario.jumping = True
                 mario.jump()
-
 
     pg.display.update()
 pg.quit()
