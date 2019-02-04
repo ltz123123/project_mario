@@ -38,6 +38,36 @@ class Qmark(wt_on_earth):
                 pg.draw.rect(screen, (255, 255, 0), (self.x, self.y, self.width, self.height))
 
 
+class brick(wt_on_earth):
+    def __init__(self, x, y, width, height):
+        wt_on_earth.__init__(self, x, y, width, height)
+        self.broken = False
+
+    def block(self):
+        if not self.broken:
+            return pg.Rect(self.x, self.y, self.width, self.height)
+        return pg.Rect(0, 0, 1, 1)
+
+    def earth(self):
+        if not self.broken:
+            return pg.Rect(self.x - 4, self.y - 4, self.width + 8, 4)
+        return pg.Rect(0, 0, 1, 1)
+
+    def ceiling(self):
+        if not self.broken:
+            return pg.Rect(self.x, self.y + self.height, self.width, 4)
+        return pg.Rect(0, 0, 1, 1)
+
+    def ceiling_hitbox(self):
+        if not self.broken:
+            return pg.Rect(self.x + 3, self.y + self.height, self.width - 6, 4)
+        return pg.Rect(0, 0, 1, 1)
+
+    def draw(self, mario, screen):
+        if abs(self.x - mario.x) < 1300 and not self.broken:
+            pg.draw.rect(screen, (169, 0, 0), (self.x, self.y, self.width, self.height))
+
+
 # groung
 g1 = wt_on_earth(0, 280, 1100, 20)
 g2 = wt_on_earth(1135, 280, 240, 20)
@@ -81,6 +111,23 @@ s56 = wt_on_earth(2970, 190, 15, 90)
 s57 = wt_on_earth(2985, 175, 15, 105)
 s58 = wt_on_earth(3000, 160, 15, 120)
 s59 = wt_on_earth(3015, 160, 15, 120)
+# Question mark block
+q1 = Qmark(255, 215, 15, 15)
+q2 = Qmark(335, 215, 15, 15)
+q3 = Qmark(350, 150, 15, 15)
+q4 = Qmark(365, 215, 15, 15)
+q5 = Qmark(1250, 215, 15, 15)
+q6 = Qmark(1500, 150, 15, 15)
+q7 = Qmark(1695, 215, 15, 15)
+q8 = Qmark(1745, 215, 15, 15)
+q9 = Qmark(1790, 215, 15, 15)
+q10 = Qmark(1745, 150, 15, 15)
+q11 = Qmark(2065, 150, 15, 15)
+q12 = Qmark(2080, 150, 15, 15)
+# brick
+b1 = brick(320, 215, 15, 15)
+b2 = brick(350, 215, 15, 15)
+b3 = brick(380, 215, 15, 15)
 
 map = [g1, g2, g3, g4,
        p1, p2, p3, p4, p5, p6,
@@ -90,8 +137,6 @@ map = [g1, g2, g3, g4,
        s41, s42, s43, s44,
        s51, s52, s53, s54, s55, s56, s57, s58, s59]
 
-map_qmark = [Qmark(255, 215, 15, 15),
-             Qmark(335, 215, 15, 15),
-             Qmark(350, 150, 15, 15),
-             Qmark(365, 215, 15, 15)
-             ]
+map_qmark = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12,b1, b2, b3]
+
+map_brick = []

@@ -10,6 +10,7 @@ def draw(map, map_q, mario, screen):
         j.draw(mario, screen)
 
 
+
 def colli(map, map_q):
     for i in map:
         if mario.hitbox().colliderect(i.block()):
@@ -44,7 +45,7 @@ def hit_ceiling():
 def vert_move():
     mario.y += mario.dy
     if hit_ceiling():
-        mario.dy = 0
+        mario.dy = 5
     else:
         while colli(map, map_qmark):
             mario.jumping = False
@@ -96,7 +97,7 @@ while run:
     vert_move()
     gravity()
     hit_ceiling_hitbox()
-    print(mario.dy)
+
 
     keys = pg.key.get_pressed()
     if keys[pg.K_LEFT] and mario.x > 0:

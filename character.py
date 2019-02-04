@@ -9,9 +9,9 @@ class character(object):
         self.dy = 0
         self.width = 10
         self.height = 20
-        self.vel = 1
+        self.vel = 5
         self.jumping = False
-        self.jumpCount = 5
+
 
     def jump(self):
         self.dy = -17
