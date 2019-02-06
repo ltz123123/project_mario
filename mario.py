@@ -46,15 +46,18 @@ def hit_ceiling():
 
 def gravity(who):
     who.y += who.dy
+
     if hit_ceiling():
-        who.dy = 3
+        who.dy = 5
     else:
         while colli(who, map, map_breakable):
             who.jumping = False
             who.y -= 1
+
     if not isEarth(who, map, map_breakable):
         if who.dy < 15:
             who.dy += 1
+        who.jumping = True
     else:
         while colli(who, map, map_breakable):
             who.jumping = False
@@ -66,7 +69,7 @@ def camera(sign):
     global moveCam
     if mario.x > 200:
         moveCam = True
-    elif map[0].x > -5 or map[3].x < -1985:
+    elif map[0].x > -5 or map[3].x < -320:
         moveCam = False
     if moveCam:
         for i in map:
@@ -84,7 +87,6 @@ def auto_run():
                 return True
 
     if touch_pipe():
-        m1.y += 1
         if m1.left:
             m1.x += m1.vel
             m1.left = False
@@ -98,26 +100,29 @@ def auto_run():
     elif m1.right:
         m1.x += m1.vel
     if not isEarth(m1, map, map_breakable):
-        if m1.dy < 15:
-            m1.dy += 1
-        m1.y += m1.dy
-        m1.jumping = True
-    else:
-        m1.dy = 0
-        m1.jumping = False
+        m1.y += 5
+
+
+def hit_enemy():
+    if mario.hitbox().colliderect(m1.head()) and mario.y < m1.y - 5:
+        mario.jumping = True
+        mario.dy = -7
 
 
 pg.init()
 screen = pg.display.set_mode((500, 300))
 pg.display.set_caption('Mario')
 clock = pg.time.Clock()
-marioImg = [pg.image.load('1.png'), pg.image.load('2.png'), pg.image.load('3.png'), pg.image.load('4.png'),
-            pg.image.load('man.png')]
-mario = character(50, 260, marioImg)
+marioImg_s = [pg.image.load('stand.png'), pg.image.load('jl.png'), pg.image.load('jr.png')]
+marioImg_l = [pg.image.load('L1.png'), pg.image.load('L2.png'), pg.image.load('L3.png'), pg.image.load('L4.png'),
+              pg.image.load('L5.png')]
+marioImg_r = [pg.image.load('R1.png'), pg.image.load('R2.png'), pg.image.load('R3.png'), pg.image.load('R4.png'),
+              pg.image.load('R5.png')]
+mario = character(50, 260, marioImg_s, marioImg_l, marioImg_r)
 moveCam = False
 
 # test auto_run
-m1 = enemy(350, 135, None)
+m1 = enemy(480, 265, None, None, None)
 
 run = True
 while run:
@@ -135,6 +140,7 @@ while run:
     mario.draw(screen)
     m1.draw(screen)
     auto_run()
+    hit_enemy()
     gravity(mario)
     hit_ceiling_hitbox()
 
@@ -144,6 +150,7 @@ while run:
         camera(1)
         mario.left = True
         mario.right = False
+        mario.standing = False
         if colli(mario, map, map_breakable):
             camera(-1)
             mario.x += mario.vel
@@ -152,12 +159,13 @@ while run:
         camera(-1)
         mario.right = True
         mario.left = False
+        mario.standing = False
         if colli(mario, map, map_breakable):
             camera(1)
             mario.x -= mario.vel
     else:
-        mario.left = False
-        mario.right = False
+
+        mario.standing = True
 
     if isEarth(mario, map, map_breakable):
         if keys[pg.K_UP]:
