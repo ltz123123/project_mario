@@ -8,6 +8,8 @@ def draw(map, map_q, mario, screen):
         i.draw(mario, screen)
     for j in map_q:
         j.draw(mario, screen)
+    for k in all_enemy:
+        k.draw(screen)
 
 
 def colli(who, map, map_q):
@@ -44,69 +46,73 @@ def hit_ceiling():
     return False
 
 
-def gravity(who):
-    who.y += who.dy
+def gravity(mario):
+    mario.y += mario.dy
 
     if hit_ceiling():
-        who.dy = 5
+        mario.dy = 3
     else:
-        while colli(who, map, map_breakable):
-            who.jumping = False
-            who.y -= 1
+        while colli(mario, map, map_breakable):
+            mario.jumping = False
+            mario.y -= 1
 
-    if not isEarth(who, map, map_breakable):
-        if who.dy < 15:
-            who.dy += 1
-        who.jumping = True
+    if not isEarth(mario, map, map_breakable):
+        if mario.dy < 15:
+            mario.dy += 1
+        mario.jumping = True
     else:
-        while colli(who, map, map_breakable):
-            who.jumping = False
-            who.dy = 0
-            who.y -= 1
+        while colli(mario, map, map_breakable):
+            mario.jumping = False
+            mario.dy = 0
+            mario.y -= 1
 
 
 def camera(sign):
     global moveCam
-    if mario.x > 200:
+    if mario.x > 195:
         moveCam = True
-    elif map[0].x > -5 or map[3].x < -320:
+    elif map[0].x > -5:
         moveCam = False
     if moveCam:
         for i in map:
             i.x += mario.vel * sign
         for j in map_breakable:
             j.x += mario.vel * sign
+        for k in all_enemy:
+            k.x += mario.vel * sign
         mario.x += mario.vel * sign
-        m1.x += mario.vel * sign
 
 
 def auto_run():
-    def touch_pipe():
+    def touch_pipe(q):
         for i in [p1, p2, p3, p4, p5, p6, s11]:
-            if m1.hitbox().colliderect(i.block()):
+            if q.hitbox().colliderect(i.block()):
                 return True
 
-    if touch_pipe():
-        if m1.left:
-            m1.x += m1.vel
-            m1.left = False
-            m1.right = True
-        elif m1.right:
-            m1.x -= m1.vel
-            m1.right = False
-            m1.left = True
-    if m1.left:
-        m1.x -= m1.vel
-    elif m1.right:
-        m1.x += m1.vel
-    if not isEarth(m1, map, map_breakable):
-        m1.y += 5
+    for j in all_enemy:
+        if (j.x - mario.x) < 300:
+            j.spawned = True
+        if j.lp >= 0:
+            if j.y > 300:
+                j.lp -= 1
+            j.run()
+            if touch_pipe(j):
+                if j.left:
+                    j.left = False
+                    j.right = True
+                elif j.right:
+                    j.right = False
+                    j.left = True
+            if not isEarth(j, map, map_breakable):
+                j.y += 5
 
 
 def hit_enemy():
-    if mario.hitbox().colliderect(m1.head()) and mario.y < m1.y - 5:
-        mario.jumping = True
-        mario.dy = -7
+    for i in all_enemy:
+        if mario.hitbox().colliderect(i.hitbox()) and mario.y < i.y - 5:
+            i.hit_once()
+            mario.jumping = True
+            mario.dy = -7
 
 
 pg.init()
@@ -120,9 +126,6 @@ marioImg_r = [pg.image.load('R1.png'), pg.image.load('R2.png'), pg.image.load('R
               pg.image.load('R5.png')]
 mario = character(50, 260, marioImg_s, marioImg_l, marioImg_r)
 moveCam = False
-
-# test auto_run
-m1 = enemy(480, 265, None, None, None)
 
 run = True
 while run:
@@ -138,7 +141,6 @@ while run:
     screen.fill((0, 0, 0))
     draw(map, map_breakable, mario, screen)
     mario.draw(screen)
-    m1.draw(screen)
     auto_run()
     hit_enemy()
     gravity(mario)
@@ -164,7 +166,6 @@ while run:
             camera(1)
             mario.x -= mario.vel
     else:
-
         mario.standing = True
 
     if isEarth(mario, map, map_breakable):
