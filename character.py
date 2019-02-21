@@ -5,8 +5,9 @@ class character(object):
     def __init__(self, x, y):
         self.life = 3
         self.big = False
-        self.shooting = True
+        self.shooting = False
         self.immortal = False
+        self.timer = 300
         self.x = x
         self.y = y
         self.width = 10
@@ -58,9 +59,9 @@ class character(object):
             elif self.right:
                 window.blit(self.img_s[2], (self.x, self.y))
         if self.immortal:
-            pg.draw.circle(window, (255, 255, 255), (self.x + self.width // 2, self.y + self.height // 2), self.width * 2, 1)
+            pg.draw.rect(window, (255, 255, 255), (self.x, self.y - 5, self.width * self.timer / 300, 3))
         if self.shooting:
-            pg.draw.circle(window, (255, 0, 0), (self.x + self.width // 2, self.y + self.width // 3), self.width // 2 - 2)
+            pg.draw.circle(window, (255, 0, 0), (self.x + self.width // 2, self.y + self.width // 3), self.width // 2 - 1)
 
     def get_big(self):
         if not self.big:
@@ -116,6 +117,7 @@ class enemy(object):
         self.lp = 1
         self.color = (0, 255, 255)
         self.walkCount = 0
+
     def run(self):
         if self.lp > 0:
             if self.left:

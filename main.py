@@ -2,11 +2,31 @@ from character import *
 from earth import *
 
 
+def gg_text():
+    font1 = pg.font.SysFont("comicsansms", 40, False)
+    font2 = pg.font.SysFont("comicsansms", 20, False)
+    text1 = font1.render('Game Over', 1, (255, 255, 255))
+    text2 = font2.render('Press Esc to exit', 1, (255, 255, 255))
+    screen.blit(text1, (150, 120))
+    screen.blit(text2, (170, 180))
+
+
 def draw():
-    screen.fill((0, 0, 0))
-    for i in bullet + map + map_breakable + all_enemy + all_bonus:
-        i.draw(mario, screen)
-    mario.draw(screen)
+    global over
+    font0 = pg.font.SysFont("comicsansms", 20, False)
+
+    text0 = font0.render('life: ' + str(mario.life), 1, (255, 255, 255))
+
+    if over:
+        screen.fill((0, 0, 0))
+        gg_text()
+        screen.blit(text0, (0, 0))
+    else:
+        screen.fill((0, 0, 0))
+        screen.blit(text0, (0, 0))
+        for i in bullet + map + map_breakable + all_enemy + all_bonus:
+            i.draw(mario, screen)
+        mario.draw(screen)
 
 
 def collision(who):
@@ -149,9 +169,11 @@ def shoot():
 
 
 def game_flow():
+    global over
+
     def dead():
-        global cam_ref, immortal_time
-        immortal_time = 300
+        global cam_ref
+        mario.timer = 300
         mario.life -= 1
         mario.x, mario.y = 50, 260
         cam_ref = 50
@@ -167,12 +189,11 @@ def game_flow():
         mario.load()
 
     def immortal_ticking():
-        global immortal_time
-        if immortal_time > 0:
-            immortal_time -= 1
+        if mario.timer > 0:
+            mario.timer -= 1
         else:
             mario.immortal = False
-            immortal_time = 300
+            mario.timer = 300
 
     for p in all_enemy:
         if mario.hitbox().colliderect(p.hitbox()):
@@ -214,6 +235,9 @@ def game_flow():
         dead()
         mario.immortal = False
 
+    if mario.life == 0:
+        over = True
+
     if q2.broken:
         bonus1.spawned = True
     if q10.broken:
@@ -228,7 +252,7 @@ def game_flow():
 
 
 def end():
-    global cam_ref, goal
+    global cam_ref, goal, screen
 
     def goal_animation():
         if not is_earth(mario.hitbox()):
@@ -238,6 +262,8 @@ def end():
             mario.jumping = False
         elif mario.hitbox().colliderect(s60.castle()):
             mario.standing = True
+            screen.fill((0, 0, 0))
+            gg_text()
 
     if mario.hitbox().colliderect(s60.pole()):
         goal = True
@@ -249,6 +275,7 @@ pg.init()
 screen = pg.display.set_mode((500, 300))
 pg.display.set_caption('scuffed Mario')
 clock = pg.time.Clock()
+over = False
 goal = False
 move_cam = False
 cam_ref = 50
